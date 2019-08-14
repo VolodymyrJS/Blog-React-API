@@ -1,10 +1,18 @@
 import React, { Component } from "react";
-import { Route, NavLink, Switch } from "react-router-dom";
+import { Route, NavLink, Switch, Redirect } from "react-router-dom";
 import Posts from "../../containers/Blog/Posts/Posts";
-import NewPost from "../Blog/NewPost/NewPost";
+import asyncComponent from "../../hoc/asyncComponent";
+//import NewPost from "../Blog/NewPost/NewPost";
 import "./Blog.css";
 
+const asyncNewPost = asyncComponent(() => {
+  return import("../Blog/NewPost/NewPost");
+});
+
 class Blog extends Component {
+  state = {
+    isAuth: true
+  };
   render() {
     return (
       <div>
@@ -23,8 +31,16 @@ class Blog extends Component {
           </nav>
         </header>
         <Switch>
-          <Route path="/new-post" component={NewPost} />
+          {this.state.isAuth ? (
+            <Route path="/new-post" component={asyncNewPost} />
+          ) : null}
           <Route path="/posts" component={Posts} />
+          <Route
+            render={() => (
+              <h1 style={{ textAlign: "center" }}>Page not found 404.</h1>
+            )}
+          />
+          {/* <Redirect from="/" to="/posts" /> */}
         </Switch>
       </div>
     );
