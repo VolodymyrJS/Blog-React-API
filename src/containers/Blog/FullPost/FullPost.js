@@ -8,13 +8,13 @@ class FullPost extends Component {
     selectedPost: null
   };
 
-  componentDidUpdate() {
-    if (this.props.id) {
+  componentDidMount() {
+    if (this.props.match.params.id) {
       if (
         !this.state.selectedPost ||
         this.state.selectedPost.id !== this.props.id
       ) {
-        const url = `/posts/${this.props.id}`;
+        const url = `/posts/${this.props.match.params.id}`;
         axios.get(url).then(response => {
           this.setState({ selectedPost: response.data });
         });
